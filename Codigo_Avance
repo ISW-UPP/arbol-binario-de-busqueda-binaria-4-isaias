@@ -19,7 +19,7 @@ Nodo* crearNodo(int, Nodo*);
 void insertarNodo(Nodo*&, int, Nodo*);
 void mostrarArbol(Nodo*, int);
 void busqbinaria(int[],int);
-
+int quickSort(int[],int,int);
 
 Nodo* arbol = NULL;
 
@@ -44,7 +44,7 @@ void menu() {
 
 		switch (opcion)
 		{
-		case 1: cout << "\n Digite el tamaño del arbol: " << endl;
+		case 1: cout << "\n Digite el tamano del arbol: " << endl;
 			cin >> tam;
 			arr=new int[tam];
 			for(int i=0;i<tam;i++){
@@ -54,6 +54,11 @@ void menu() {
 			insertarNodo(arbol, dato, NULL);
 			cout << "\n";
 			}
+			cout<<sizeof(arr);
+			/*while(e<sizeof(arr)){
+				cout<<arr[e]<<" , ";
+				e++;
+			}*/
 			break;
 
 		case 2:  cout << "\n Mostrar arbol:\n\n" << endl;
@@ -65,8 +70,9 @@ void menu() {
 			cout<<"\n Buscar dato con Busqueda Secuencial\n\n"<<endl;
 			cout<<" Que dato desea buscar??"<<endl<<endl;
 			cin>>busq;
-			while(e<10){
-				cout<<arr[e]<<" , ";-
+			quickSort(arr,0,sizeof(arr)-1);
+			while(e<sizeof(arr)){
+				cout<<arr[e]<<" , ";
 				
 				e++;
 			}
@@ -169,4 +175,49 @@ void busqbinaria(int arreglo[],int datobus){
 	{
 		cout << "El numero no se encontro";
 	}
+}
+//FUncion completa de QuickSort
+int partition(int arr[], int start, int end)
+{
+ 
+    int pivot = arr[start];
+ 
+    int count = 0;
+    for (int i = start + 1; i <= end; i++) {
+        if (arr[i] <= pivot)
+            count++;
+    }
+ 
+    int pivotIndex = start + count;
+    swap(arr[pivotIndex], arr[start]);
+ 
+    int i = start, j = end;
+ 
+    while (i < pivotIndex && j > pivotIndex) {
+ 
+        while (arr[i] <= pivot) {
+            i++;
+        }
+ 
+        while (arr[j] > pivot) {
+            j--;
+        }
+ 
+        if (i < pivotIndex && j > pivotIndex) {
+            swap(arr[i++], arr[j--]);
+        }
+    }
+ 
+    return pivotIndex;
+}
+ 
+int quickSort(int arr[], int start, int end)
+{
+	int p;
+    if (start >= end)
+        return p;
+     p = partition(arr, start, end);
+    quickSort(arr, start, p - 1);
+    quickSort(arr, p + 1, end);
+    return p;                                                                         
 }
