@@ -1,0 +1,223 @@
+#include<iostream>
+#include<conio.h>
+#include<stdlib.h>
+
+using namespace std;
+
+
+struct Nodo {
+	int dato;
+	Nodo* der;
+	Nodo* izq;
+	Nodo* padre;
+};
+
+
+//Prototipos
+void menu();
+Nodo* crearNodo(int, Nodo*);
+void insertarNodo(Nodo*&, int, Nodo*);
+void mostrarArbol(Nodo*, int);
+void busqbinaria(int[],int);
+int quickSort(int[],int,int);
+
+Nodo* arbol = NULL;
+
+int main()
+{
+	menu();
+	return 0;
+
+}
+
+void menu() {
+	int dato,tam, opcion, contador = 0,busq,e=0, *arr;
+	
+	do {
+		cout << "\n \tMENU" << endl;
+		cout << "1. Insertar un nuevo nodo" << endl;
+		cout << "2. Mostrar el arbol" << endl;
+		cout << "3. Buscar elemento" << endl;
+		cout << "4. SALIR" << endl;
+		cout << " Elige una opcion: " << endl;
+		cin >> opcion;
+
+		switch (opcion)
+		{
+		case 1: cout << "\n Digite el tamano del arbol: " << endl;
+			cin >> tam;
+			arr=new int[tam];
+			for(int i=0;i<tam;i++){
+			cout << "\n Digite el valor del nodo "<<i+1<<" :"<< endl;
+			cin >> dato;
+			arr[i]=dato;
+			insertarNodo(arbol, dato, NULL);
+			cout << "\n";
+			}
+			cout<<sizeof(arr);
+			/*while(e<sizeof(arr)){
+				cout<<arr[e]<<" , ";
+				e++;
+			}*/
+			break;
+
+		case 2:  cout << "\n Mostrar arbol:\n\n" << endl;
+			mostrarArbol(arbol, contador);
+			cout << "\n";
+			system("pause");
+			break;
+		case 3:
+			cout<<"\n Buscar dato con Busqueda Secuencial\n\n"<<endl;
+			cout<<" Que dato desea buscar??"<<endl<<endl;
+			cin>>busq;
+			quickSort(arr,0,sizeof(arr)-1);
+			while(e<sizeof(arr)){
+				cout<<arr[e]<<" , ";
+				
+				e++;
+			}
+			cout<<endl<<endl;
+			busqbinaria(arr,busq);
+			break;
+		case 4:
+			cout<<"\n Gracias por usar el programa :3 ";
+			break;
+		} 
+	} while (opcion != 4);
+	
+}	
+//Funcion para crear un nuevo nodo
+Nodo* crearNodo(int n, Nodo* padre)
+{
+	Nodo* nuevo_nodo = new Nodo();
+
+	nuevo_nodo->dato = n;
+	nuevo_nodo->der = NULL;
+	nuevo_nodo->izq = NULL;
+	nuevo_nodo->padre = padre;
+
+	return nuevo_nodo;
+}
+//Funcion para insertar elementos en el arbol
+void insertarNodo(Nodo*& arbol, int n, Nodo* padre)
+{
+	if (arbol == NULL) //Esta vacio
+	{
+		Nodo* nuevo_nodo = crearNodo(n, padre);
+		arbol = nuevo_nodo;
+	}
+	else
+	{
+		int valorRaiz = arbol->dato;
+		if (n < valorRaiz) //Si el elemento es menor a la raiz, insertamos izq
+		{
+			insertarNodo(arbol->izq, n, arbol);
+		}
+		else
+		{
+			insertarNodo(arbol->der, n, arbol); //Si el elemento es menor a la raiz, insertamos der
+		}
+
+	}
+}
+//Funcion para mostrar el arbol completo
+void mostrarArbol(Nodo* arbol, int cont)
+{
+	if (arbol == NULL) //Si el arbol esta vacio
+	{
+		return;
+	
+	}
+	else
+	{
+		mostrarArbol(arbol->der, cont + 1);
+		for (int i = 0; i < cont; i++)
+		{
+			cout << " ";
+		}
+		cout << arbol->dato << endl;
+		mostrarArbol(arbol->izq, cont + 1);
+	}
+}
+//Funcion para Busqueda Binaria
+void busqbinaria(int arreglo[],int datobus){
+	int inf=0, sup=sizeof(arreglo), mitad,i=0;
+	char band = 'F';
+	
+	while ((inf <= sup) && (i< sizeof(arreglo)))
+	{
+		mitad = (inf + sup) / 2;// mitad
+
+		if (arreglo[mitad] == datobus)
+		{
+			band = 'V';
+			
+			break; //Se encontro el elemento buscado, para no perder tiempo
+		}
+		if (arreglo[mitad] > datobus)
+		{
+			sup = mitad;
+			mitad = (inf + sup) / 2; //Refrescar la mitad con un nuevo valor del lado superior
+		}
+		if(arreglo[mitad] < datobus)
+		{
+			inf = mitad;
+			mitad = (inf + sup) / 2; //Refrescar la mitad con un nuevo valor del lado inferior
+		}
+		i++;
+	}
+
+	if (band == 'V')
+	{
+		cout << "El numero se encontro en la posicion: " << mitad << endl; // mitad guarda las posiciones
+	}
+	else
+	{
+		cout << "El numero no se encontro";
+	}
+}
+//FUncion completa de QuickSort
+int partition(int arr[], int start, int end)
+{
+ 
+    int pivot = arr[start];
+ 
+    int count = 0;
+    for (int i = start + 1; i <= end; i++) {
+        if (arr[i] <= pivot)
+            count++;
+    }
+ 
+    int pivotIndex = start + count;
+    swap(arr[pivotIndex], arr[start]);
+ 
+    int i = start, j = end;
+ 
+    while (i < pivotIndex && j > pivotIndex) {
+ 
+        while (arr[i] <= pivot) {
+            i++;
+        }
+ 
+        while (arr[j] > pivot) {
+            j--;
+        }
+ 
+        if (i < pivotIndex && j > pivotIndex) {
+            swap(arr[i++], arr[j--]);
+        }
+    }
+ 
+    return pivotIndex;
+}
+ 
+int quickSort(int arr[], int start, int end)
+{
+	int p;
+    if (start >= end)
+        return p;
+     p = partition(arr, start, end);
+    quickSort(arr, start, p - 1);
+    quickSort(arr, p + 1, end);
+    return p;                                                                         
+}
